@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from terminal.views import TerminalView
+
 
 urlpatterns = [
-    path('',views.index,name = 'index')
+    path('',TerminalView.as_view(),name = 'terminal_commands'),
 ]

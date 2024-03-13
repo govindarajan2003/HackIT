@@ -1,0 +1,15 @@
+asgiref==3.5.2
+djangorestframework==3.14.0
+Django==4.1.13
+greenlet==1.1.2
+lxml==5.1.0
+matplotlib==3.8.2
+numpy==1.26.3
+Pillow==10.0.1
+PyJWT==2.3.0
+PyMySQL==1.0.2
+pytz==2022.1
+SQLAlchemy==1.4.31
+sqlalchemy-migrate==0.13.0
+sqlparse==0.4.3
+mysqlclient==2.2.4
