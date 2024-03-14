@@ -10,7 +10,6 @@ class TerminalView(APIView):
 
     def get(self, request):
         command_id = request.data.get("id", None)
-        
         data = None
         status = HTTP_400_BAD_REQUEST
         if command_id:
@@ -29,20 +28,22 @@ class TerminalView(APIView):
             status = status
         )
     def post(self, request):
+
         url = request.data.get("url", None)
-        
         data = None
         status = HTTP_400_BAD_REQUEST
+        
         if url:
             data = {
                 "zap": "zap.sh -quickout",
                 "nmap": "nmap ",
+                "command_status":"SUCCESS / TEST ERROR"
             }
             status = HTTP_200_OK
         
         else:
             status = HTTP_400_BAD_REQUEST
-        
+
         return Response(
             data = data,
             content_type = "application/json",
