@@ -1,35 +1,41 @@
 // server.js
-const express = require("express");
-const bodyParser = require("body-parser");
-const axios = require("axios");
-
+const express = require('express');
+const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DJANGO_API_URL = "http://your-django-api-url/login"; // Update this with your Django API endpoint URL
 
-// Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Serve HTML file
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/Login.html");
+// Serve register.html for /register route
+app.get('/register', (req, res) => {
+    res.sendFile(__dirname + '/register.html');
 });
 
-// Handle login POST request
-app.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    // Forward login details to Django API
-    const response = await axios.post(DJANGO_API_URL, { username, password });
-    res.json(response.data); // Send back the response from Django API
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+// Serve login.html for /login route
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
 });
 
-// Start server
+// Handle user registration
+app.post('/register', async (req, res) => {
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/user/register/', req.body);
+        res.json(response.data);
+    } catch (error) {
+        res.status(400).json({ error: error.response.data });
+    }
+});
+
+// Handle user login
+app.post('/login', async (req, res) => {
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/user/login/', req.body);
+        res.json(response.data);
+    } catch (error) {
+        res.status(400).json({ error: error.response.data });
+    }
+});
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });

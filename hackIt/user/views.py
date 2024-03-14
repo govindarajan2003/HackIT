@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import UserSerializer
 from .models import User
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
-from django.core.exceptions import ObjectDoesNotExist
+#http://127.0.0.1:8000/api/v1/user/register/from rest_framework.authtoken.models import Token
+#from django.contrib.auth import authenticate
+#from django.core.exceptions import ObjectDoesNotExist
 
 
 @api_view(['POST'])
@@ -20,13 +20,13 @@ def register_user(request):
 
 
 
-'''@api_view(['POST'])
+@api_view(['POST'])
 def user_login(request):
     if request.method == 'POST':
         username = request.data.get('username')
         password = request.data.get('password')
 
-        user = None
+        '''user = None
         if '@' in username:
             try:
                 user = User.objects.get(email=username)
