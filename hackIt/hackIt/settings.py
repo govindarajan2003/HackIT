@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     #CustomInstallation
     'rest_framework', 
     #'rest_framework_simplejwt',
+    'celery',
+    #'kombu.transport.django',
 
     #CustomApplication
     'terminal',
@@ -152,6 +154,19 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.User'
+
+#import os
+
+#BROKER_URL = os.environ.get('RABBITMQ_URL', 'amqp://guest:guest@localhost:5672/')
+#CELERY_RESULT_BACKEND = 'rabbitmq://localhost:5672/myvhost'
+
+
+RABBITMQ_HOST = 'localhost'
+RABBITMQ_PORT = 5672
+RABBITMQ_VHOST = '/'
+RABBITMQ_USER = 'guest'
+RABBITMQ_PASSWORD = 'guest'
+
 '''
 REST_FRAMEWORK = {
 'DEFAULT_AUTHENTICATION_CLASSES':(

@@ -1,14 +1,33 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK,HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
-import subprocess
-from utils.constants import status_options, vulnerable_ports
-from utils.terminal.nmap import parse_nmap_output, nmap_scan
-from utils.terminal.zap import zap_scan, zap_results
+from django.conf import settings
+from django.http import JsonResponse
 
+from utils.rabbitMQ.send import send_scan_request
+from utils.rabbitMQ.receive import receive_scan_request,process_data
+
+def send_data(request):
+    if request.method == 'POST':
+        input_data = request.POST.get('input_data')
+        send_scan_request(input_data)
+        response_data = {'message': 'Scan request sent successfully', 'input_data': input_data}
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+        
+def receive_data(request):
+    result=receive_scan_request()
+    return JsonResponse(result)
+
+def home_view(request):
+    return render(request, 'home.html')
+
+
+
+
+
+'''
 
 class TerminalView(APIView):
     def get(self, request):
@@ -69,4 +88,4 @@ class TerminalView(APIView):
 
         return Response(data, status=HTTP_200_OK)
 
-    
+    '''

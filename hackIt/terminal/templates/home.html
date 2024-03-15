@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% csrf_token %}
+</head>
+<body>
+    <h1>Welcome to My Homepage</h1>
+    <div>
+        <input type="text" id="inputText" placeholder="Enter some text">
+        <button id="submitButton">Submit</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function(){
+            // Function to trigger AJAX request and update data
+            function fetchData() {
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'receive_data' %}",
+                    success: function(response){
+                        // Display processed data
+                        $('#result').html('Processed data: ' + JSON.stringify(response));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Initial call to fetch data
+            fetchData();
+
+            // Set interval to fetch data every 5 seconds (for example)
+            setInterval(fetchData, 5000);
+
+            // Define click event for submit button
+            $('#submitButton').click(function(){
+                var inputData = $('#inputText').val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'send_data' %}",
+                    data: {
+                        'input_data': inputData,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function(response){
+                        // Display response message
+                        $('#result').html(response.message);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
