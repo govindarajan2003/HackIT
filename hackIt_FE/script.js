@@ -3,7 +3,7 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
     event.preventDefault();
     
     // Capture form data
-    const formData = {
+    const formData = { 
         username: document.getElementById('username').value,
         password: document.getElementById('password').value,
         email: document.getElementById('email').value
@@ -13,7 +13,7 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
     const jsonData = JSON.stringify(formData);
     try {
         // Send POST request to backend API
-        const response = await fetch('http://127.0.0.1:8000/api/v1/user/register/', {
+        const response = await fetch('http://192.168.0.18:8000/api/v1/user/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

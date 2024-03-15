@@ -19,7 +19,7 @@ app.get('/login', (req, res) => {
 // Handle user registration
 app.post('/register', async (req, res) => {
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/user/register/', req.body);
+        const response = await axios.post('http://192.168.0.18:8000/api/v1/user/register/', req.body);
         res.json(response.data);
     } catch (error) {
         res.status(400).json({ error: error.response.data });
@@ -29,7 +29,7 @@ app.post('/register', async (req, res) => {
 // Handle user login
 app.post('/login', async (req, res) => {
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/user/login/', req.body);
+        const response = await axios.post('http://192.168.0.18:8000/api/v1/user/login/', req.body);
         res.json(response.data);
     } catch (error) {
         res.status(400).json({ error: error.response.data });

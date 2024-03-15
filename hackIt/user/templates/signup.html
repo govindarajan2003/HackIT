@@ -1,0 +1,45 @@
+<!-- myapp/templates/signup.html
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <h2>Sign Up</h2>
+    <form method="post">
+      {% csrf_token %}
+      <label for="username">Username:</label><br />
+      <input type="text" id="username" name="username" /><br />
+      <label for="email">Email:</label><br />
+      <input type="email" id="email" name="email" /><br />
+      <label for="password">Create Password:</label><br />
+      <input type="password" id="password" name="password" /><br />
+      <label for="confirm_password">Confirm Password:</label><br />
+      <input
+        type="password"
+        id="confirm_password"
+        name="confirm_password"
+      /><br />
+      <input type="submit" value="Sign Up" />
+    </form>
+  </body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <h2>Sign Up</h2>
+    <form method="POST">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Sign Up</button>
+    </form>
+  </body>
+</html>
