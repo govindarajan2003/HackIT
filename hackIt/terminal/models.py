@@ -14,12 +14,11 @@ class TerminalCommands(models.Model):
     
 
 class Records(models.Model):
-    user_id = models.ForeignKey(User,on_delete = models.CASCADE, related_name = 'user_record')
-    terminal_command = models.ForeignKey(TerminalCommands,on_delete = models.CASCADE, related_name = 'command_record' )
+    id = models.AutoField(primary_key=True)
     url = models.CharField(max_length = 100)
     status = models.CharField(choices = generate_status_choices(), default = generate_status_choices()[0], max_length = 20)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-
+    result = models.CharField(max_length = 5000, null = True)
     def __str__(self):
         return f"{self.command} - {self.URL} - Status: {self.status} - Created: {self.created_at} - Updated: {self.updated_at}"

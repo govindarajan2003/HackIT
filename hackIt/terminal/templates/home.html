@@ -17,14 +17,23 @@
 
     <script>
         $(document).ready(function(){
-            // Function to trigger AJAX request and update data
+            // Function to fetch and display data asynchronously
             function fetchData() {
                 $.ajax({
                     type: "GET",
                     url: "{% url 'receive_data' %}",
                     success: function(response){
-                        // Display processed data
-                        $('#result').html('Processed data: ' + JSON.stringify(response));
+                        // Clear previous data
+                        $('#result').empty();
+
+                        // Loop through each item in the response and create HTML
+                        $.each(response, function(index, item) {
+                            var html = '<div>';
+                            html += '<p>URL: ' + item.url + '</p>';
+                            html += '<p>Status: ' + item.status + '</p>';
+                            html += '</div>';
+                            $('#result').append(html);
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
