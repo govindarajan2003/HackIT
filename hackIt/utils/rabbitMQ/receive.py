@@ -12,21 +12,23 @@ def receive_scan_request():
     def callback(ch, method, properties, body):
         data = json.loads(body)
         url = data.get('url')
-        record_instance = data.get('instance')
+        result = data.get('result')
+        status = data.get('status')
 
         if url:
-            record_instance.status = "RECEIVED BY WORKER"
+            status = "RECEIVED BY WORKER"
             try:
                 result_data = process_data(url)
-                record_instance.result = json.dumps(result_data)  # Corrected json.dumps
+                result = json.dumps(result_data)  # Corrected json.dumps
             except Exception as e:
-                record_instance.status = "TEST-ERROR"
+                status = "TEST-ERROR"
                 ch.basic_reject(delivery_tag=method.delivery_tag, requeue=True)
+
         else:
             ch.basic_reject(delivery_tag=method.delivery_tag, requeue=True)
-            record_instance.status = "TEST-ERROR - URL MISSING"
+            status = "TEST-ERROR - URL MISSING"
             
-        print_output.append(record_instance.status)  # Append status to print_output
+        print_output.append(status)  # Append status to print_output
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
@@ -36,7 +38,7 @@ def receive_scan_request():
                           auto_ack=True)
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
-
+    
     return print_output
 
 def process_data(url):
@@ -52,7 +54,7 @@ def process_data(url):
 
     elif zap_result is None:
         print_and_append("Failed to execute zap scan")
-        
+
     if nmap_result is None and zap_result is None:
         raise Exception("Failed to execute zap scan")
         

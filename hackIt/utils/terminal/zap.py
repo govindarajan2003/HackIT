@@ -25,6 +25,7 @@ def zap_results():
     parsed_data = zap_parse_data(alerts_json)
     # Return JSON response
     return Response(parsed_data, status=HTTP_200_OK, content_type='application/json')
+
 def zap_parse_data(json_data):
     data = json.loads(json_data)  # Parse the JSON data
 

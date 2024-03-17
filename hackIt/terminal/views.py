@@ -28,7 +28,6 @@ def send_data(request):
     result=receive_scan_request()
     return JsonResponse(result)
 '''
-
 def receive_data(request):
     # Query the database to get the required data
     records = Records.objects.all()
