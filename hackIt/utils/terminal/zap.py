@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from zapv2 import ZAPv2
 import subprocess
-
+'''
 command = [
     "zap.sh",
     "-daemon",
@@ -13,8 +13,7 @@ command = [
 
 # Run the command
 process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-
+'''
 
 api_key = 'msi9aud5e2id3udm0ijh80uu37'
 
@@ -36,6 +35,7 @@ def zap_results():
     
     parsed_data = zap_parse_data(alerts_json)
     # Return JSON response
+   # process.terminate()
     return Response(parsed_data, status=HTTP_200_OK, content_type='application/json')
 
 def zap_parse_data(json_data):

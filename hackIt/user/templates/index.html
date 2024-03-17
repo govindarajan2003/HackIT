@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS styles */
+        body {
+            background-color: #000; /* Black background */
+            color: #fff; /* White text */
+            font-family: Arial, sans-serif; /* Default font */
+        }
+
+        .container {
+            margin-top: 20px; /* Add some space from the top */
+        }
+
+        h1 {
+            color: #fff; /* White heading */
+        }
+
+        /* Customizing the navbar */
+        .navbar {
+            background-color: #000; /* Black background for the navbar */
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem; /* Larger font size for the brand */
+            color: #fff; /* White color for the brand */
+        }
+
+        .nav-link {
+            color: #fff; /* White color for links */
+            font-weight: bold; /* Make the links bold */
+        }
+
+        .nav-link:hover {
+            color: #007bff; /* Change link color on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Bug Trackers</h1>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Automated Penetration Testing </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

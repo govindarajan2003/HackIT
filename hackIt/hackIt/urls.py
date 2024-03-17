@@ -22,5 +22,7 @@ urlpatterns = [
     path('terminal/',include("terminal.urls")),
     path('user/',include("user.urls")),
     path('authentication/', include('user.urls')),
+    path('', include('user.urls')),
+    
     
 ]

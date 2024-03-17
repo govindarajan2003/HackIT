@@ -10,6 +10,10 @@ from django.contrib.auth import login, logout
 
 from utils.user.forms import CustomUserCreationForm
 from django.contrib.auth import get_user_model
+from django.db import connection
+
+from terminal.models import Records
+
 User = get_user_model()
 
 def signup_view(request):
@@ -34,6 +38,11 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 def logout_view(request):
-    logout(request)
-    return redirect('login')  # Redirect to the login page after logout
+    with connection.cursor() as cursor:
+        cursor.execute('TRUNCATE TABLE terminal_records')
 
+    logout(request)
+    return redirect('login')  
+
+def index_view(request):
+    return render(request,'index.html')

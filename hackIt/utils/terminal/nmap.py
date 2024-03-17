@@ -5,12 +5,16 @@ from urllib.parse import urlparse
 def nmap_scan(url):
     hostname = extract_hostname(url)
     nmap_command = ["nmap", hostname]
-    completed_process = subprocess.run(nmap_command, stdout=subprocess.PIPE, text=True, check=True)
-    output = completed_process.stdout
-    parsed_output = parse_nmap_output(output)
-    print(hostname)
 
-    return parsed_output
+    try:
+        completed_process = subprocess.run(nmap_command, stdout=subprocess.PIPE, text=True, check=True)
+        output = completed_process.stdout
+        parsed_output = parse_nmap_output(output)
+        print(hostname)
+        return parsed_output
+    except BrokenPipeError as e:
+        print(f"Broken pipe error occurred: {e}")
+        return None  
 
 def extract_hostname(target_expression):
     parsed_url = urlparse(target_expression)

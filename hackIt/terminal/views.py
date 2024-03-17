@@ -1,10 +1,10 @@
-
+#library/packages import
 import json
 from django.shortcuts import render
 from django.conf import settings
-from django.http import JsonResponse
-from django.http import HttpResponse
+from django.http import JsonResponse,HttpResponse
 
+from django.contrib.auth.decorators import login_required
 from utils.rabbitMQ.send import send_scan_request
 from utils.rabbitMQ.receive import receive_scan_request,process_data
 from terminal.models import Records
@@ -13,7 +13,7 @@ def send_data(request):
     if request.method == 'POST':
         url = request.POST.get('input_data')
 
-        status = "Scheduled"
+        status = "SCHEDULED"
         record_instance = Records.objects.create(
             url=url,
             status=status
@@ -119,7 +119,7 @@ def download_terminal_record(request, id):
 
     return response
 
-
+@login_required
 def home_view(request):
     return render(request, 'home.html')
 

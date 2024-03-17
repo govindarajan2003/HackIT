@@ -5,11 +5,6 @@ from terminal.models import Records
 
 def send_scan_request(record_instance):
     
-    record_instance.status = "SENDED"
-    
-    record_instance.save()
-
-
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='scan_requests')
@@ -21,6 +16,9 @@ def send_scan_request(record_instance):
                             body = body.encode('utf-8')
                             )
     
+    
+    record_instance.status = "IN_PROGRESS-SENDED"
+    record_instance.save()
     print("[x] sent",record_instance.url)
     connection.close()
 
