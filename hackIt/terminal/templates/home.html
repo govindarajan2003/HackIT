@@ -6,14 +6,76 @@
     <title>Home</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {% csrf_token %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .downloadBtn {
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to My Homepage</h1>
-    <div>
-        <input type="text" id="inputText" placeholder="Enter some text">
-        <button id="submitButton">Submit</button>
+    <div class="container">
+        <div>
+            <input type="text" id="inputText" placeholder="Enter some text">
+            <button id="submitButton">Submit</button>
+        </div>
+        <div id="result"></div>
     </div>
-    <div id="result"></div>
 
     <script>
         $(document).ready(function(){
@@ -28,11 +90,12 @@
 
                         // Loop through each item in the response and create HTML
                         $.each(response, function(index, item) {
-                            var html = '<div>';
+                            var html = '<div class="result-item">';
                             html += '<p>URL: ' + item.url + '</p>';
                             html += '<p>Status: ' + item.status + '</p>';
+                            html += '<button class="downloadBtn" data-id="' + item.id + '">Download</button>'; // Add a download button
                             html += '</div>';
-                            $('#result').append(html);
+                            $('#result').prepend(html); // Add new data on top
                         });
                     },
                     error: function(xhr, status, error) {
@@ -47,7 +110,6 @@
             // Set interval to fetch data every 5 seconds (for example)
             setInterval(fetchData, 5000);
 
-            // Define click event for submit button
             $('#submitButton').click(function(){
                 var inputData = $('#inputText').val();
                 $.ajax({
@@ -66,6 +128,32 @@
                     }
                 });
             });
+
+            $('#result').on('click', '.downloadBtn', function() {
+                var id = $(this).data('id');
+                window.location.href = "/terminal/download/" + id;
+            });
+
+            // Function to continuously call Receiver view
+            function callReceiverView() {
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'receiver' %}",
+                    success: function(response){
+                        // Handle the response if needed
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Initial call to callReceiverView function
+            callReceiverView();
+
+            // Set interval to callReceiverView every 10 seconds (for example)
+            setInterval(callReceiverView, 10000);
         });
     </script>
 </body>

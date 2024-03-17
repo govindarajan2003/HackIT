@@ -6,6 +6,7 @@ from terminal.models import Records
 def send_scan_request(record_instance):
     
     record_instance.status = "SENDED"
+    
     record_instance.save()
 
 

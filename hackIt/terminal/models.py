@@ -16,7 +16,7 @@ class TerminalCommands(models.Model):
 class Records(models.Model):
     id = models.AutoField(primary_key=True)
     url = models.CharField(max_length = 100)
-    status = models.CharField(choices = generate_status_choices(), default = generate_status_choices()[0], max_length = 20)
+    status = models.CharField(choices = generate_status_choices(), default = generate_status_choices()[0], max_length = 50)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     result = models.TextField(null = True)

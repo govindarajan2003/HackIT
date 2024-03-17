@@ -13,17 +13,19 @@ def receive_scan_request():
         data = json.loads(body)
         id = data.get('id')
         url = data.get('url')
-        record_instance = None
+        record_instance = Records.objects.get(id = id)
         
         if url:
-            record_instance = Records.objects.get(id = id)
+            
             record_instance.status = "RECEIVED BY WORKER"
             record_instance.save()
             
             try:
                 result_data = process_data(url)
                 record_instance.result = json.dumps(result_data)  # Corrected json.dumps
+                record_instance.status = "COMPLETED"
                 record_instance.save()
+                
 
                 
             except Exception as e:
@@ -68,7 +70,8 @@ def process_data(url):
         
     data = {
         "nmap": nmap_result.data if hasattr(nmap_result, 'data') else None,
-        "zap": zap_result.data if hasattr(zap_result, 'data') else None
+        #"zap": zap_result.data if hasattr(zap_result, 'data') else None
+        "zap": None
     }
     print_and_append("Processed data: " + str(data))  # Or you can return this data if needed
 

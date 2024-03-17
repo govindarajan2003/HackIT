@@ -41,3 +41,18 @@ If you prefer to set a more complex password that complies with the existing pol
 npm init -y
 
 npm install express body-parser
+
+sudo systemctl stop rabbitmq-server
+sudo rabbitmq-server
+pip install kombu
+
+
+You use celery 4.4.1 has requirement kombu<4.7,>=4.6.10, but you'll have kombu 4.6.8 which is incompatible.
+
+pip install celery==4.4.6
+
+pip install kombu==4.6.10
+
+
+pip install redis==3.2.1
+
