@@ -13,7 +13,51 @@ def zap_scan(url):
     # Initiate ZAP scans: spider and active scan
     zap.spider.scan(url)
     zap.ascan.scan(url)
+    
+def zap_results():
+    # Retrieve ZAP scan results
+    alerts = zap.core.alerts()
 
+    # Serialize alerts to JSON
+    alerts_json = json.dumps(alerts)
+    
+    parsed_data = zap_parse_data(alerts_json)
+    # Return JSON response
+    return Response(parsed_data, status=HTTP_200_OK, content_type='application/json')
+
+def zap_parse_data(json_data):
+    summary = {}
+    detailed_report = []
+
+    data = json.loads(json_data)
+    
+    for entry in data:
+        risk_rating = entry['risk']
+        if risk_rating not in summary:
+            summary[risk_rating] = 1
+        else:
+            summary[risk_rating] += 1
+
+        vulnerability = {
+            'Vulnerability Summary': entry['name'],
+            'Risk Rating': entry['risk'],
+            'Confidence Rating': entry.get('confidence', ''),  # Handling if 'confidence' key is missing
+            'Description': entry['description'],
+            'Details to Reproduce the Instance': entry.get('url', '')  # Handling if 'url' key is missing
+        }
+        detailed_report.append(vulnerability)
+
+    formatted_data = {
+        "Summary": {
+            "No. of Total Vulnerabilities Identified": sum(summary.values()),
+            "No. of Total Vulnerabilities Identified grouped on Risk Rating": summary
+        },
+        "Detailed Report": detailed_report
+    }
+    return formatted_data
+
+
+'''
 def zap_results():
     
     # Retrieve ZAP scan results
@@ -24,7 +68,7 @@ def zap_results():
     
     parsed_data = zap_parse_data(alerts_json)
     # Return JSON response
-    return Response(parsed_data, status=HTTP_200_OK, content_type='application/json')
+    return Response(alerts_json, status=HTTP_200_OK, content_type='application/json')
 
 def zap_parse_data(json_data):
     data = json.loads(json_data)  # Parse the JSON data
@@ -58,3 +102,4 @@ def zap_parse_data(json_data):
     detailed_report += "5. **Details to Reproduce the Instance:** (Not provided in the data)\n"
 
     return summary + "\n" + detailed_report
+'''

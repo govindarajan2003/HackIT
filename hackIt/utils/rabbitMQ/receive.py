@@ -20,6 +20,7 @@ def receive_scan_request():
             try:
                 result_data = process_data(url)
                 result = json.dumps(result_data)  # Corrected json.dumps
+                
             except Exception as e:
                 status = "TEST-ERROR"
                 ch.basic_reject(delivery_tag=method.delivery_tag, requeue=True)
@@ -38,7 +39,7 @@ def receive_scan_request():
                           auto_ack=True)
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
-    
+
     return print_output
 
 def process_data(url):

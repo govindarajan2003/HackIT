@@ -39,6 +39,23 @@ def receive_data(request):
     # Return the serialized data as JSON response
     return JsonResponse(data, safe=False)
 
+'''
+
+def receive_data(request):
+    try:
+        # Query the database to get the required data
+        records = Records.objects.all()
+
+        # Serialize the data into a list of dictionaries
+        data = [{'url': record.url, 'status': record.status} for record in records]
+
+        # Return the serialized data as JSON response
+        return JsonResponse(data, safe=False)
+
+    except Exception as e:
+        # Handle any exceptions gracefully
+        return JsonResponse({'error': str(e)}, status=500)'''
+
 def home_view(request):
     return render(request, 'home.html')
 
