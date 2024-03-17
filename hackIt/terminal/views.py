@@ -63,14 +63,13 @@ def download_terminal_record(request, id):
     # Create a response with the HTML content
     html_content = f"""
     <html>
-    <head><title>Terminal Record</title></head>
+    <head><title>Record</title></head>
     <body>
         <h1>Record for {record.url}</h1>
         <p><strong>ID:</strong> {record.id}</p>
         <p><strong>URL:</strong> {record.url}</p>
         <p><strong>Status:</strong> {record.status}</p>
-        <p><strong>Created At:</strong> {record.created_at}</p>
-        <p><strong>Updated At:</strong> {record.updated_at}</p>
+        <p><strong>Generated At:</strong> {record.created_at}</p>
         <h2>Result:</h2>
     """
 
