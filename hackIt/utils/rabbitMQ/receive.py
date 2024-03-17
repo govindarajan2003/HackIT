@@ -58,7 +58,7 @@ def process_data(url):
     zap_scan(url)
     zap_result = zap_results()
     nmap_result = nmap_scan(url)
-
+    
     if nmap_result is None:
         print_and_append("Failed to execute nmap scan")
 
@@ -67,11 +67,11 @@ def process_data(url):
 
     if nmap_result is None and zap_result is None:
         raise Exception("Failed to execute zap scan")
-        
+    
+      
     data = {
-        "nmap": nmap_result.data if hasattr(nmap_result, 'data') else None,
-        #"zap": zap_result.data if hasattr(zap_result, 'data') else None
-        "zap": None
+        "nmap": nmap_result if nmap_result is not None else None,
+        "zap": zap_result.data if hasattr(zap_result, 'data') else None
     }
     print_and_append("Processed data: " + str(data))  # Or you can return this data if needed
 

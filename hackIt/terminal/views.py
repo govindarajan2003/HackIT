@@ -22,6 +22,8 @@ def send_data(request):
         
         send_scan_request(record_instance)
         
+        return HttpResponse("Data sent successfully") 
+        
 def receive_data(request):
     # Query the database to get the required data
     records = Records.objects.all()
@@ -35,7 +37,6 @@ def receive_data(request):
 def receiver_view(request):
     receive_scan_request()
     
-
 def download_terminal_record(request, id):
     # Fetch the record from the database using the provided id
     record = Records.objects.get(id=id)
@@ -45,25 +46,26 @@ def download_terminal_record(request, id):
 
     # Initialize variables to store total vulnerabilities and vulnerabilities grouped by risk rating
     total_vulnerabilities = 0
-    vulnerabilities_by_rating = {'Low': 0, 'Medium': 0, 'High': 0}
+    vulnerabilities_by_rating = {'Low': 0, 'Medium': 0, 'High': 0, 'Informational': 0}  # Initialize count for 'Informational'
 
     # Calculate total vulnerabilities and vulnerabilities grouped by risk rating in zap
     if result_data['zap']:
         for item in result_data['zap']['Detailed Report']:
             total_vulnerabilities += 1
             risk_rating = item['Risk Rating']
-            try:
-                vulnerabilities_by_rating[risk_rating] += 1
-            except KeyError:
-                # Handle the case where the risk_rating key is not found in the dictionary
-                vulnerabilities_by_rating[risk_rating] = 1
+            vulnerabilities_by_rating.setdefault(risk_rating, 0)  # Initialize count if risk rating not present
+            vulnerabilities_by_rating[risk_rating] += 1
+
+    # Calculate total vulnerable ports in nmap
+    total_vulnerable_ports = sum(1 for item in result_data['nmap']['(127.0.0.1)'] if item['recommended_action'] != 'No action Required') if result_data['nmap'] else 0
+
 
     # Create a response with the HTML content
     html_content = f"""
     <html>
     <head><title>Terminal Record</title></head>
     <body>
-        <h1>Terminal Record</h1>
+        <h1>Record for {record.url}</h1>
         <p><strong>ID:</strong> {record.id}</p>
         <p><strong>URL:</strong> {record.url}</p>
         <p><strong>Status:</strong> {record.status}</p>
@@ -72,11 +74,16 @@ def download_terminal_record(request, id):
         <h2>Result:</h2>
     """
 
+    # Add total vulnerable ports above the Nmap table
+    
+
     # Add nmap section if available
     if result_data['nmap']:
-        html_content += f"<h3>nmap:</h3><table border='1'><tr><th>Field</th><th>Value</th></tr>"
+        html_content += "<h3>nmap:</h3><table border='1'><tr><th>Port</th><th>Protocol</th><th>State</th><th>Service</th><th>Recommended Action</th></tr>"
+        html_content += f"<p>Total Vulnerable Ports: {total_vulnerable_ports}</p>"
         for key, value in result_data['nmap'].items():
-            html_content += f"<tr><td>{key}</td><td>{value}</td></tr>"
+            for item in value:
+                html_content += f"<tr><td>{item['port']}</td><td>{item['protocol']}</td><td>{item['state']}</td><td>{item['service']}</td><td>{item['recommended_action']}</td></tr>"
         html_content += "</table>"
     else:
         html_content += "<h3>nmap:</h3><p>None</p>"
@@ -112,6 +119,7 @@ def download_terminal_record(request, id):
     response['Content-Disposition'] = f'attachment; filename="{record.url}.html"'
 
     return response
+
 
 def home_view(request):
     return render(request, 'home.html')

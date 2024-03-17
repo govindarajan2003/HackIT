@@ -1,21 +1,25 @@
 import subprocess
 from utils.constants import vulnerable_ports
+from urllib.parse import urlparse
 
 def nmap_scan(url):
-    
-    nmap_command = ["nmap", url]
+    hostname = extract_hostname(url)
+    nmap_command = ["nmap", hostname]
     completed_process = subprocess.run(nmap_command, stdout=subprocess.PIPE, text=True, check=True)
     output = completed_process.stdout
     parsed_output = parse_nmap_output(output)
+    print(hostname)
 
-    if not parsed_output:
-        print("Test_error")
-    else:
-        print("SUCCESS")
-        print(parsed_output)
+    return parsed_output
 
+def extract_hostname(target_expression):
+    parsed_url = urlparse(target_expression)
+    
+    hostname = parsed_url.hostname
+    return hostname
 
 def parse_nmap_output(output):
+    total_vulnerable_ports = 0
     result = {}
     current_host = None
     current_ports = []
@@ -40,13 +44,14 @@ def parse_nmap_output(output):
                 if port in ports:
                     recommended_action = "Take action"
                     break
-
+                
             current_ports.append({
                 "port": port,
                 "protocol": protocol,
                 "state": state,
                 "service": service,
                 "recommended_action": recommended_action
+
             })
 
     if current_host:
