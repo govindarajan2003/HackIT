@@ -19,6 +19,6 @@ class Records(models.Model):
     status = models.CharField(choices = generate_status_choices(), default = generate_status_choices()[0], max_length = 20)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-    result = models.CharField(max_length = 5000, null = True)
+    result = models.TextField(null = True)
     def __str__(self):
         return f"{self.command} - {self.URL} - Status: {self.status} - Created: {self.created_at} - Updated: {self.updated_at}"

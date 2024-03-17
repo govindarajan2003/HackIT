@@ -3,7 +3,7 @@ import json
 from utils.terminal.nmap import nmap_scan
 from utils.terminal.zap import zap_results, zap_scan
 from django.conf import settings
-
+from terminal.models import Records
 def receive_scan_request():
 
     global print_output 
@@ -11,25 +11,32 @@ def receive_scan_request():
 
     def callback(ch, method, properties, body):
         data = json.loads(body)
+        id = data.get('id')
         url = data.get('url')
-        result = data.get('result')
-        status = data.get('status')
-
+        record_instance = None
+        
         if url:
-            status = "RECEIVED BY WORKER"
+            record_instance = Records.objects.get(id = id)
+            record_instance.status = "RECEIVED BY WORKER"
+            record_instance.save()
+            
             try:
                 result_data = process_data(url)
-                result = json.dumps(result_data)  # Corrected json.dumps
+                record_instance.result = json.dumps(result_data)  # Corrected json.dumps
+                record_instance.save()
+
                 
             except Exception as e:
-                status = "TEST-ERROR"
+                record_instance.status = "TEST-ERROR"
+                record_instance.save()
                 ch.basic_reject(delivery_tag=method.delivery_tag, requeue=True)
 
         else:
             ch.basic_reject(delivery_tag=method.delivery_tag, requeue=True)
-            status = "TEST-ERROR - URL MISSING"
+            record_instance.status = "TEST-ERROR - URL MISSING"
+            record_instance.save()
             
-        print_output.append(status)  # Append status to print_output
+        #print_output.append(status)  # Append status to print_output
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()

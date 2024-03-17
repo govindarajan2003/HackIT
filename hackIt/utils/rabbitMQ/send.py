@@ -5,7 +5,8 @@ from terminal.models import Records
 
 def send_scan_request(record_instance):
     
-    status = record_instance.status
+    record_instance.status = "SENDED"
+    record_instance.save()
 
 
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
